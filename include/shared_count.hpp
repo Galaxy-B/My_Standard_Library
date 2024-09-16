@@ -28,6 +28,10 @@ protected:
     // add a shared referrence to this counter
     void add_shared();
 
+    // get the current count of shared referrences
+    int get_count();
+
+public:
     // minus a shared referrence from this counter, return true when it drops to -1
     bool release_shared();
 };

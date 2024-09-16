@@ -19,4 +19,9 @@ bool shared_count::release_shared()
     return false;
 }
 
+int shared_count::get_count()
+{
+    return shared_owners_.load();
+}
+
 } // namespace bstd
