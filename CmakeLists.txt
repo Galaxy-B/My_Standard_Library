@@ -33,3 +33,7 @@ add_library(shared_count_lib source/shared_count.cpp)
 
 # test tuple
 add_executable(tuple source/tuple.cpp test/tuple.cpp)
+
+# test future
+add_executable(future source/future.cpp test/future.cpp)
+target_link_libraries(future shared_count_lib)
