@@ -20,7 +20,7 @@ protected:
     shared_count(const shared_count&)            = delete;
     shared_count& operator=(const shared_count&) = delete;
     
-    virtual ~shared_count();
+    virtual ~shared_count() {}
 
     // called when shared count drops to -1 (i.e. no one holds referrence to it anymore)
     virtual void non_shared() = 0;
@@ -28,10 +28,12 @@ protected:
     // add a shared referrence to this counter
     void add_shared();
 
+public:
+    shared_count() {}
+
     // get the current count of shared referrences
     int get_count();
 
-public:
     // minus a shared referrence from this counter, return true when it drops to -1
     bool release_shared();
 };
