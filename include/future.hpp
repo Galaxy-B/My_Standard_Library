@@ -16,6 +16,14 @@
 
 namespace bstd {
 
+// forward declaration of promise
+template <class Ret>
+class promise;
+
+// forward declaration of future
+template <class Ret>
+class future;
+
 enum associate_state
 {
     initial  = 0,   
@@ -46,6 +54,9 @@ public:
 // maintain the state of the channel between promise and future
 class channel_state : public shared_count
 {
+    template <class> friend class promise;
+    template <class> friend class future;
+
 protected:
     // store the exception thrown by the callee thread
     std::exception_ptr exception_;
@@ -58,7 +69,7 @@ protected:
     unsigned state_{initial};
 
     // when the value is deferred, use callback to finish the async call
-    virtual void execute() = 0;
+    // virtual void execute() = 0; [TODO]
 
     // attach a future to the channel
     void attach_future();
@@ -80,6 +91,9 @@ class channel_value : public channel_state
     using base = channel_state;
     // memory-aligned type of the return value of the channel
     using type = typename std::aligned_storage<sizeof(Ret), std::alignment_of<Ret>::value>::type;
+
+    template <class> friend class promise;
+    template <class> friend class future;
 
 protected:
     type value_;
@@ -131,10 +145,6 @@ protected:
         delete this;
     } 
 };
-
-// forward declaration
-template <class Ret>
-class promise;
 
 // funtor for releasing shared count
 struct release_shared_count
@@ -195,7 +205,7 @@ private:
     template <class> friend class std::packaged_task;
 
 public:
-    promise() : channel_(new channel_value<Ret>) {}
+    promise() : channel_(new channel_value<Ret>()) {}
 
     // get the future matching the promise
     future<Ret> get_future()

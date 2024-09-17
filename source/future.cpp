@@ -57,13 +57,14 @@ void channel_state::wait_result(std::unique_lock<std::mutex>& lock)
     {
         state_ &= ~deferred;
         lock.unlock();
-        execute();
+        // execute(); [TODO]
     }
     // the result is not ready yet, wait in conditional variable
     else
     {
         while ((state_ & ready) == 0)
         {
+            lock.unlock(); // [TODO]
             cv_.wait(lock);
         }
     }
